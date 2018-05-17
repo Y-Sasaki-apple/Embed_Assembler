@@ -5,13 +5,6 @@ Easy Assembler
 #include<string.h>
 #include"Header.h"
 
-void set_label(const char* name, int place) {
-
-}
-void set_label_place(const char* name, int place) {
-
-}
-
 void search_label(FILE* fp_read) {
 	char line[MAX_LINE];
 	char *token[4];
@@ -65,7 +58,9 @@ void search_label(FILE* fp_read) {
 
 int main(int argc, char* argv[]) {
 	FILE *fp_read, *fp_write;
-	fp_read = fopen_s(&fp_read, argv[1], "r");
-	fp_write = fopen_s(&fp_write, argv[2], "wb");
+
+	init();
+	fopen_s(&fp_read, argv[1], "r");
+	fopen_s(&fp_write, argv[2], "wb");
 
 }
