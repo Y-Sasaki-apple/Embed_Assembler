@@ -5,8 +5,6 @@
 #define MAX_DATA 3000
 #define MAX_LINE 200
 
-char output[MAX_DATA] = { 0 };
-
 void init() {
 	init_resisters();
 	init_commands();
