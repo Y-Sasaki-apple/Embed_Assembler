@@ -1,6 +1,9 @@
 #pragma once
 #include<string.h>
 #define REG_NAME_MAX 3
+
+extern char errmsg[];
+extern int error;
 enum ResisterNum {
 	A = 0b01, B = 0b10, C = 0b11
 };
@@ -23,5 +26,7 @@ int check_resister(const char* resister) {
 	for (int i = 0; i < 3; i++) {
 		if (strcmp(resister, resisters[i].name)==0)return resisters[i].number;
 	}
+	sprintf_s(errmsg, sizeof(errmsg), "レジスタ%sは見つかりません。名前を確認してください。", resister);
+	error = 1;
 	return -1;
 }

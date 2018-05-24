@@ -4,6 +4,9 @@
 #define LABELNAME_MAX 300
 #define MAX_LABEL 30
 #define MAX_LABEL_IN_CODE 300
+
+extern char errmsg[];
+extern int error;
 struct LABEL {
 	int pos;
 	char name[LABELNAME_MAX];
@@ -26,5 +29,12 @@ int get_label(const char* name) {
 			return labels[i].pos;
 		}
 	}
-	return strtol(name, NULL, 16);
+	char* t;
+	int ret;
+	ret= strtol(name, &t, 16);
+	if (t == name) {
+		sprintf_s(errmsg, sizeof(errmsg), "ラベル%sは見つかりません。名前を確認してください。", name);
+		error = 1;
+	}
+	return ret;
 }

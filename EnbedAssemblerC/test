@@ -1,5 +1,6 @@
 ; sample program : sigma
                                   ; address code
+
           ORG       0x00             
           LD        ZERO, A       ;   00    81 A1
           MOV       A, B          ;   02    06

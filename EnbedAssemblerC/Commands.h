@@ -5,6 +5,9 @@
 #include"Label.h"
 #define COMMAND_NUM 21
 #define COMMAND_NAME_MAX 4
+
+extern char errmsg[];
+extern int error;
 enum CommandNum {
 	Mov = 0, LD, ST, Add, AdC, Sub, SbB, And, Or, EOr, Inc, Dec, Not, Jmp, JS, JZ, JC, Halt, Org, Db,End
 };
@@ -25,6 +28,8 @@ int check_command(const char* command) {
 	for (int i = 0; i < COMMAND_NUM; i++) {
 		if (_stricmp(command, commands[i].name)==0)return commands[i].number;
 	}
+	sprintf_s(errmsg,sizeof(errmsg),"コマンド%sは見つかりません。名前を確認してください。",command);
+	error = 1;
 	return -1;
 }
 
@@ -99,7 +104,6 @@ int not(const char* arg1, const char* arg2, char* output) {
 	return 1;
 }
 int jmp(const char* arg1, const char* arg2, char* output) {
-	int r1 = check_resister(arg1);
 	int r2 = get_label(arg1);
 	output[0] = 0b11000000;
 	output[1] = r2;
@@ -165,7 +169,6 @@ void process_extra_commands(enum CommandNum id, const char* arg1, const char* ar
 	}
 	else if(id == Db) {
 		outdata[*index] = get_label(arg1);
-		(*index)++;
 	}
 	else if (id == End) {
 	}
