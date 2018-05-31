@@ -2,7 +2,7 @@
 #include<string.h>
 #define REG_NAME_MAX 3
 
-extern char errmsg[];
+extern char errmsg[3000];
 extern int error;
 enum ResisterNum {
 	A = 0b01, B = 0b10, C = 0b11

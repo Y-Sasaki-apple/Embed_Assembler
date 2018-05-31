@@ -5,7 +5,7 @@
 #define MAX_LABEL 30
 #define MAX_LABEL_IN_CODE 300
 
-extern char errmsg[];
+extern char errmsg[3000];
 extern int error;
 struct LABEL {
 	int pos;
@@ -32,7 +32,7 @@ int get_label(const char* name) {
 	char* t;
 	int ret;
 	ret= strtol(name, &t, 16);
-	if (t == name) {
+	if (t != name+strlen(name)) {
 		sprintf_s(errmsg, sizeof(errmsg), "ラベル%sは見つかりません。名前を確認してください。", name);
 		error = 1;
 	}

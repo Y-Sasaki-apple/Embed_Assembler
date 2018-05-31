@@ -6,7 +6,7 @@
 #define COMMAND_NUM 21
 #define COMMAND_NAME_MAX 4
 
-extern char errmsg[];
+extern char errmsg[3000];
 extern int error;
 enum CommandNum {
 	Mov = 0, LD, ST, Add, AdC, Sub, SbB, And, Or, EOr, Inc, Dec, Not, Jmp, JS, JZ, JC, Halt, Org, Db,End
@@ -169,6 +169,7 @@ void process_extra_commands(enum CommandNum id, const char* arg1, const char* ar
 	}
 	else if(id == Db) {
 		outdata[*index] = get_label(arg1);
+		(*index)++;
 	}
 	else if (id == End) {
 	}
