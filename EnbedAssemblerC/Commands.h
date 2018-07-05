@@ -157,7 +157,7 @@ void init_commands() {
 	init_command(14, "Js", JS, 1, 2, js, 0);
 	init_command(15, "Jz", JZ, 1, 2, jz, 0);
 	init_command(16, "Jc", JC, 1, 2, jc, 0);
-	init_command(17, "Halt", Halt, 1, 2, halt, 0);
+	init_command(17, "Halt", Halt, 0, 1, halt, 0);
 	init_command(18, "ORG", Org, 1, 0, NULL, 1);
 	init_command(19, "DB", Db, 1, 0, NULL, 1);
 	init_command(20, "End", End, 0, 0, NULL, 1);
