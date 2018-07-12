@@ -3,16 +3,16 @@
 #include"Header.h"
 #include"Register.h"
 #include"Label.h"
-#define COMMAND_NUM 23
+#define COMMAND_NUM 27
 #define COMMAND_NAME_MAX 4
 
 extern char errmsg[3000];
 extern int error;
 enum CommandNum {
-	Mov = 0, LD, ST, Add, AdC, Sub, SbB, And, Or, EOr, Inc, Dec, Not, Jmp, JS, JZ, JC, Halt, Org, Db, End, SHR, SHL
+	Mov = 0, LD, ST, Add, AdC, Sub, SbB, And, Or, EOr, Inc, Dec, Not, Jmp, JS, JZ, JC, Halt, Org, Db, End, SHR, SHL, JNZ, INI, MVI, ADDAB
 };
 char* CommandNames[COMMAND_NUM] = {
-	"MOV","LD","ST","ADD","ADC","SUB","SBB","AND","OR","EOR","INC","DEC","NOT","JMP","JS","JZ","JC","HALT","Org","Db","End","SHR","SHL"
+	"MOV","LD","ST","ADD","ADC","SUB","SBB","AND","OR","EOR","INC","DEC","NOT","JMP","JS","JZ","JC","HALT","Org","Db","End","SHR","SHL","JNZ","INI","MVI","ADDAB"
 };
 struct Command {
 	char name[COMMAND_NAME_MAX + 1];
@@ -141,6 +141,29 @@ int shl(const char* arg1, const char* arg2, char* output) {
 	output[0] = 0b010011 << 2 | r1;
 	return 1;
 }
+int addab(const char* arg1, const char* arg2, char* output) {
+	int r1 = check_resister(arg1);
+	output[0] = 0b011000 << 2 | r1;
+	return 1;
+}
+int jnz(const char* arg1, const char* arg2, char* output) {
+	int r1 = get_label(arg1);
+	output[0] = 0b11110100;
+	output[1] = r1;
+	return 1;
+}
+int ini(const char* arg1, const char* arg2, char* output) {
+	int r1 = check_resister(arg1);
+	output[0] = 0b010111 << 2 | r1;
+	return 1;
+}
+int mvi(const char* arg1, const char* arg2, char* output) {
+	int r1 = get_label(arg1);
+	int r2 = check_resister(arg2);
+	output[0] = 0b010100 << 2 | r2;
+	output[1] = r1;
+	return 1;
+}
 void init_command(int i, const char *name, enum CommandNum number, int argn, int datan, int(*func)(const char* arg1, const char* arg2, char* output), int extra) {
 	strcpy_s(commands[i].name, sizeof(commands[i].name), name);
 	commands[i].number = number;
@@ -173,6 +196,10 @@ void init_commands() {
 	init_command(20, "End", End, 0, 0, NULL, 1);
 	init_command(21, "Shr", SHR, 1, 1, shr, 0);
 	init_command(22, "Shl", SHL, 1, 1, shl, 0);
+	init_command(23, "Shl", JNZ, 1, 1, shl, 0);
+	init_command(24, "Shl", MVI, 1, 1, shl, 0);
+	init_command(25, "Shl", INI, 1, 1, shl, 0);
+	init_command(26, "Shl", ADDAB, 1, 1, shl, 0);
 }
 
 void process_extra_commands(enum CommandNum id, const char* arg1, const char* arg2, char* outdata, int* index) {
