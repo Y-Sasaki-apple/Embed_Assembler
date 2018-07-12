@@ -3,16 +3,16 @@
 #include"Header.h"
 #include"Register.h"
 #include"Label.h"
-#define COMMAND_NUM 21
+#define COMMAND_NUM 23
 #define COMMAND_NAME_MAX 4
 
 extern char errmsg[3000];
 extern int error;
 enum CommandNum {
-	Mov = 0, LD, ST, Add, AdC, Sub, SbB, And, Or, EOr, Inc, Dec, Not, Jmp, JS, JZ, JC, Halt, Org, Db,End
+	Mov = 0, LD, ST, Add, AdC, Sub, SbB, And, Or, EOr, Inc, Dec, Not, Jmp, JS, JZ, JC, Halt, Org, Db, End, SHR, SHL
 };
 char* CommandNames[COMMAND_NUM] = {
-	"MOV","LD","ST","ADD","ADC","SUB","SBB","AND","OR","EOR","INC","DEC","NOT","JMP","JS","JZ","JC","HALT","Org","Db","End"
+	"MOV","LD","ST","ADD","ADC","SUB","SBB","AND","OR","EOR","INC","DEC","NOT","JMP","JS","JZ","JC","HALT","Org","Db","End","SHR","SHL"
 };
 struct Command {
 	char name[COMMAND_NAME_MAX + 1];
@@ -26,9 +26,9 @@ struct Command commands[COMMAND_NUM];
 
 int check_command(const char* command) {
 	for (int i = 0; i < COMMAND_NUM; i++) {
-		if (_stricmp(command, commands[i].name)==0)return commands[i].number;
+		if (_stricmp(command, commands[i].name) == 0)return commands[i].number;
 	}
-	sprintf_s(errmsg,sizeof(errmsg),"コマンド%sは見つかりません。名前を確認してください。",command);
+	sprintf_s(errmsg, sizeof(errmsg), "コマンド%sは見つかりません。名前を確認してください。", command);
 	error = 1;
 	return -1;
 }
@@ -131,7 +131,17 @@ int halt(const char* arg1, const char* arg2, char* output) {
 	output[0] = 0b11111111;
 	return 1;
 }
-void init_command(int i, const char *name, enum CommandNum number, int argn, int datan, int(*func)(const char* arg1, const char* arg2, char* output),int extra) {
+int shr(const char* arg1, const char* arg2, char* output) {
+	int r1 = check_resister(arg1);
+	output[0] = 0b010010 << 2 | r1;
+	return 1;
+}
+int shl(const char* arg1, const char* arg2, char* output) {
+	int r1 = check_resister(arg1);
+	output[0] = 0b010011 << 2 | r1;
+	return 1;
+}
+void init_command(int i, const char *name, enum CommandNum number, int argn, int datan, int(*func)(const char* arg1, const char* arg2, char* output), int extra) {
 	strcpy_s(commands[i].name, sizeof(commands[i].name), name);
 	commands[i].number = number;
 	commands[i].argn = argn;
@@ -140,7 +150,7 @@ void init_command(int i, const char *name, enum CommandNum number, int argn, int
 	commands[i].isextra = extra;
 }
 void init_commands() {
-	init_command(0, "Mov", Mov, 2, 1, mov,0);
+	init_command(0, "Mov", Mov, 2, 1, mov, 0);
 	init_command(1, "Ld", LD, 2, 2, ld, 0);
 	init_command(2, "St", ST, 2, 2, st, 0);
 	init_command(3, "Add", Add, 1, 1, add, 0);
@@ -161,13 +171,15 @@ void init_commands() {
 	init_command(18, "ORG", Org, 1, 0, NULL, 1);
 	init_command(19, "DB", Db, 1, 0, NULL, 1);
 	init_command(20, "End", End, 0, 0, NULL, 1);
+	init_command(21, "Shr", SHR, 1, 1, shr, 0);
+	init_command(22, "Shl", SHL, 1, 1, shl, 0);
 }
 
-void process_extra_commands(enum CommandNum id, const char* arg1, const char* arg2,char* outdata, int* index) {
+void process_extra_commands(enum CommandNum id, const char* arg1, const char* arg2, char* outdata, int* index) {
 	if (id == Org) {
 		*index = get_label(arg1);
 	}
-	else if(id == Db) {
+	else if (id == Db) {
 		outdata[*index] = get_label(arg1);
 		(*index)++;
 	}

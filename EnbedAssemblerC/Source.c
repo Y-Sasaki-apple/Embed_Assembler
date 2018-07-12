@@ -24,9 +24,9 @@ void search_label(FILE * fp_read) {
 		char* arg[2] = { NULL };
 		int argn = 0;
 		int i = 0;
-		token[i++] = strtok_s(line, " \n", &next_token);
+		token[i++] = strtok_s(line, " \n\t", &next_token);
 		if (!token[0] || token[0][0] == ';')continue;
-		for (; i < 4 && (token[i] = strtok_s(NULL, " ,\n", &next_token)); i++) {
+		for (; i < 4 && (token[i] = strtok_s(NULL, " ,\n\t", &next_token)); i++) {
 			if (token[i][0] == ';')break;
 		}
 		argn = i - 1;
@@ -89,8 +89,8 @@ void assemble(FILE * fp_read) {
 		char* arg[2];
 		int i = 0;
 		char output[2];
-		token[i++] = strtok_s(line, " \n", &next_token);
-		for (; i < 4 && (token[i] = strtok_s(NULL, " ,\n", &next_token)); i++)if (token[i][0] == ';')break;
+		token[i++] = strtok_s(line, " \n\t", &next_token);
+		for (; i < 4 && (token[i] = strtok_s(NULL, " ,\n\t", &next_token)); i++)if (token[i][0] == ';')break;
 		if (!token[0] || token[0][0] == ';')continue;
 		for (; i < 4; i++)token[i] = "";
 		if (strchr(token[0], ':') != '\0') {
