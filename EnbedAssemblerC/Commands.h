@@ -173,6 +173,7 @@ void init_command(int i, const char *name, enum CommandNum number, int argn, int
 	commands[i].isextra = extra;
 }
 void init_commands() {
+	//struct Command commands[] = { {.number = 1 } };
 	init_command(0, "Mov", Mov, 2, 1, mov, 0);
 	init_command(1, "Ld", LD, 2, 2, ld, 0);
 	init_command(2, "St", ST, 2, 2, st, 0);
@@ -196,10 +197,10 @@ void init_commands() {
 	init_command(20, "End", End, 0, 0, NULL, 1);
 	init_command(21, "Shr", SHR, 1, 1, shr, 0);
 	init_command(22, "Shl", SHL, 1, 1, shl, 0);
-	init_command(23, "Shl", JNZ, 1, 1, shl, 0);
-	init_command(24, "Shl", MVI, 1, 1, shl, 0);
-	init_command(25, "Shl", INI, 1, 1, shl, 0);
-	init_command(26, "Shl", ADDAB, 1, 1, shl, 0);
+	init_command(23, "Jnz", JNZ, 1, 2, jnz, 0);
+	init_command(24, "Mvi", MVI, 2, 2, mvi, 0);
+	init_command(25, "Ini", INI, 1, 1, ini, 0);
+	init_command(26, "Addab", ADDAB, 1, 1, addab, 0);
 }
 
 void process_extra_commands(enum CommandNum id, const char* arg1, const char* arg2, char* outdata, int* index) {
