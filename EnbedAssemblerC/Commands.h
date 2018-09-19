@@ -4,15 +4,15 @@
 #include"Register.h"
 #include"Label.h"
 #define COMMAND_NUM 27
-#define COMMAND_NAME_MAX 4
+#define COMMAND_NAME_MAX 5
 
 extern char errmsg[3000];
 extern int error;
 enum CommandNum {
-	Mov = 0, LD, ST, Add, AdC, Sub, SbB, And, Or, EOr, Inc, Dec, Not, Jmp, JS, JZ, JC, Halt, Org, Db, End, SHR, SHL, JNZ, INI, MVI, ADDAB
+	Mov = 0, LD, ST, Add, AdC, Sub, SbB, And, Or, EOr, Inc, Dec, Not, Jmp, JS, JZ, JC, Halt, Org, Db, End, SHR, SHL, JNZ,  MVI, INI, ADDAB
 };
 char* CommandNames[COMMAND_NUM] = {
-	"MOV","LD","ST","ADD","ADC","SUB","SBB","AND","OR","EOR","INC","DEC","NOT","JMP","JS","JZ","JC","HALT","Org","Db","End","SHR","SHL","JNZ","INI","MVI","ADDAB"
+	"MOV","LD","ST","ADD","ADC","SUB","SBB","AND","OR","EOR","INC","DEC","NOT","JMP","JS","JZ","JC","HALT","Org","Db","End","SHR","SHL","JNZ","MVI","INI","ADDAB"
 };
 struct Command {
 	char name[COMMAND_NAME_MAX + 1];
@@ -160,7 +160,7 @@ int ini(const char* arg1, const char* arg2, char* output) {
 int mvi(const char* arg1, const char* arg2, char* output) {
 	int r1 = get_label(arg1);
 	int r2 = check_resister(arg2);
-	output[0] = 0b010100 << 2 | r2;
+	output[0] = 0b110100 << 2 | r2;
 	output[1] = r1;
 	return 1;
 }
